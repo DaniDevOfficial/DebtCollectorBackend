@@ -1,6 +1,10 @@
 package main
 
-import "github.com/gin-gonic/gin"
+import (
+	"dept-collector/internal/api"
+
+	_ "github.com/gin-gonic/gin"
+)
 
 func main() {
 	router := api.NewRouter()
