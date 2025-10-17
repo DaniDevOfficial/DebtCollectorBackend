@@ -15,4 +15,8 @@ func RegisterAuthRoutes(router *gin.RouterGroup, db *gorm.DB) {
 	router.POST("/login", func(c *gin.Context) {
 		user.Login(c, db)
 	})
+
+	router.POST("/signup", func(c *gin.Context) {
+		user.SignUp(c, db)
+	})
 }

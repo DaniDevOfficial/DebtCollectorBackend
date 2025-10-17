@@ -12,7 +12,12 @@ import (
 	"gorm.io/gorm"
 )
 
-func CreateNewUser(c *gin.Context, db *gorm.DB) {
+func SignUp(c *gin.Context, db *gorm.DB) {
+	var newAccountRequest CreateNewUserRequest
+	if err := c.ShouldBind(&newAccountRequest); err != nil {
+		responses.GenericBadRequestError(c.Writer)
+		return
+	}
 
 }
 

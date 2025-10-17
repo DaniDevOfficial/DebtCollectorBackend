@@ -1,11 +1,11 @@
 package auth
 
 import (
-	"database/sql"
 	"dept-collector/internal/pkg/jwt"
 	"fmt"
 
 	"github.com/gin-gonic/gin"
+	"gorm.io/gorm"
 )
 
 func GetJWTTokenFromHeader(c *gin.Context) (string, error) {
@@ -26,7 +26,7 @@ func GetJWTTokenFromHeader(c *gin.Context) (string, error) {
 // Returns:
 //
 //	(jwt.JWTPayload, error): Returns the decoded JWT payload if successful, otherwise returns an error.
-func GetJWTPayloadFromHeader(c *gin.Context, db *sql.DB) (jwt.Payload, error) {
+func GetJWTPayloadFromHeader(c *gin.Context, db *gorm.DB) (jwt.Payload, error) {
 	jwtToken, err := GetJWTTokenFromHeader(c)
 	var jwtData jwt.Payload
 	if err != nil {
@@ -66,7 +66,7 @@ func GetRefreshTokenFromHeader(c *gin.Context) (string, error) {
 	return refreshToken, nil
 }
 
-func CreateNewTokenWithRefreshToken(c *gin.Context, db *sql.DB) (jwt.Payload, string, error) {
+func CreateNewTokenWithRefreshToken(c *gin.Context, db *gorm.DB) (jwt.Payload, string, error) {
 	refreshToken, err := GetRefreshTokenFromHeader(c)
 	var jwtData jwt.Payload
 	if err != nil {

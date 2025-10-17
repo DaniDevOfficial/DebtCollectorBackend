@@ -2,6 +2,7 @@ package config
 
 import (
 	"dept-collector/internal/domain/user"
+	"dept-collector/internal/pkg/jwt"
 	"fmt"
 	"log"
 	"os"
@@ -31,6 +32,7 @@ func ConnectDB() *gorm.DB {
 func AutoMigrate(db *gorm.DB) {
 	err := db.AutoMigrate(
 		&user.User{},
+		&jwt.RefreshToken{},
 	)
 	if err != nil {
 		log.Fatal("Migration failed:", err)

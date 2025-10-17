@@ -1,7 +1,6 @@
 package jwt
 
 import (
-	"database/sql"
 	"encoding/base64"
 	"encoding/json"
 	"errors"
@@ -11,6 +10,8 @@ import (
 	"time"
 
 	"github.com/golang-jwt/jwt/v5"
+	"github.com/google/uuid"
+	"gorm.io/gorm"
 )
 
 var secretKey = []byte("capybara") // TODO: add secret key via .env or some rotation
@@ -63,7 +64,7 @@ func VerifyToken(tokenString string) (isValid bool, jwtData Payload, err error) 
 var RefreshTokenNotInDbError = errors.New("refresh token not found in database")
 var TokenIsNotValidDueToExpirationDate = errors.New("token is not valid due to expiration date")
 
-func VerifyRefreshToken(tokenString string, db *sql.DB) (Payload, error) {
+func VerifyRefreshToken(tokenString string, db *gorm.DB) (Payload, error) {
 
 	isValid, payload, err := VerifyToken(tokenString)
 	if err != nil || !isValid {
@@ -81,52 +82,52 @@ func VerifyRefreshToken(tokenString string, db *sql.DB) (Payload, error) {
 	return payload, nil
 }
 
-func VerifyRefreshTokenInDB(token string, userId string, db *sql.DB) (bool, error) {
-	var count int64
+func VerifyRefreshTokenInDB(token string, userId string, db *gorm.DB) (bool, error) {
 
-	query := `
-		SELECT COUNT(*)
-		FROM refresh_tokens
-		WHERE refresh_token = $1
-		AND user_id = $2
-	`
+	var tokenData RefreshToken
+	result := db.Where("refresh_token = ?", token).First(&tokenData)
 
-	err := db.QueryRow(query, token, userId).Scan(&count)
-	if err != nil {
-		return false, err
+	if result.Error != nil {
+		if errors.Is(result.Error, gorm.ErrRecordNotFound) {
+			return false, nil
+		}
+		return false, result.Error
 	}
 
-	return count > 0, nil
+	if (tokenData.UserID.String() == userId) || (tokenData.ExpiresAt.Before(time.Now())) {
+		return false, nil
+	}
+
+	return true, nil
 }
 
-func CreateRefreshToken(userData User, isTimeBased bool, db *sql.DB) (string, error) {
-	var dateTime *time.Time
+func CreateRefreshToken(userData User, isTimeBased bool, db *gorm.DB) (string, error) {
+	t := time.Now().Add(time.Hour * 24 * 365)
+
 	if isTimeBased {
-		t := time.Now().Add(time.Hour * 24 * 14)
-		dateTime = &t
+		t = time.Now().Add(time.Hour * 24 * 14)
 	}
 
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256,
 		jwt.MapClaims{
 			"UserId":   userData.UserId,
 			"Username": userData.Username,
-			"Exp": func() int64 {
-				var timestamp int64 = 0
-				if dateTime != nil {
-					timestamp = dateTime.Unix()
-				}
-				return timestamp
-			}(),
+			"Exp":      t.Unix(),
 		})
 	tokenString, err := token.SignedString(secretKey)
 	if err != nil {
 		return "", err
 	}
 
-	data := NewRefreshTokenDataDB{
-		UserId:       userData.UserId,
+	userUUID, err := uuid.Parse(userData.UserId)
+	if err != nil {
+		return "", err
+	}
+
+	data := CreateTokenInput{
+		UserID:       userUUID,
 		RefreshToken: tokenString,
-		LifeTime:     dateTime,
+		ExpiresAt:    t,
 	}
 
 	err = PushRefreshTokenToDB(data, db)
@@ -134,6 +135,7 @@ func CreateRefreshToken(userData User, isTimeBased bool, db *sql.DB) (string, er
 		log.Println(err)
 		return "", err
 	}
+
 	return tokenString, nil
 }
 
@@ -164,26 +166,21 @@ func DecodeBearer(tokenString string) (Payload, error) {
 	return payload, nil
 }
 
-func PushRefreshTokenToDB(data NewRefreshTokenDataDB, db *sql.DB) error {
-	if data.LifeTime != nil && data.LifeTime.IsZero() {
-		data.LifeTime = nil
+func PushRefreshTokenToDB(data CreateTokenInput, db *gorm.DB) error {
+	token := RefreshToken{
+		UserID:       data.UserID,
+		RefreshToken: data.RefreshToken,
+		ExpiresAt:    data.ExpiresAt,
 	}
-	sqlString := `
-	INSERT INTO refresh_tokens 
-	(user_id, refresh_Token) 
-	VALUES ($1, $2)
-`
-	log.Println(data)
-	_, err := db.Exec(sqlString, data.UserId, data.RefreshToken)
 
-	return err
+	if err := db.Create(&token).Error; err != nil {
+		return err
+	}
+
+	return nil
 }
 
-func VoidRefreshTokenInDB(token string, db *sql.DB) error {
-	sqlString := `
-	DELETE FROM refresh_tokens 
-	WHERE refresh_token = $1
-`
-	_, err := db.Exec(sqlString, token)
-	return err
+func VoidRefreshTokenInDB(token string, db *gorm.DB) error {
+	db.Delete(&RefreshToken{RefreshToken: token})
+	return nil
 }
