@@ -6,6 +6,7 @@ import (
 	"dept-collector/internal/pkg/jwt"
 	"dept-collector/internal/pkg/responses"
 	"errors"
+	"log"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -19,6 +20,55 @@ func SignUp(c *gin.Context, db *gorm.DB) {
 		return
 	}
 
+	taken, err := isUsernameOrEmailTaken(newAccountRequest.Username, newAccountRequest.Email, db)
+	if err != nil {
+		responses.GenericInternalServerError(c.Writer)
+		return
+	}
+	if taken {
+		responses.HttpErrorResponse(c.Writer, http.StatusUnauthorized, frontendErrors.UsernameOrEmailAlreadyTaken, "")
+		return
+	}
+
+	passwordHash, err := hashing.HashPassword(newAccountRequest.Password)
+	if err != nil {
+		responses.GenericInternalServerError(c.Writer)
+		return
+	}
+
+	newUser := User{
+		Name:     newAccountRequest.Username,
+		Email:    newAccountRequest.Email,
+		Password: passwordHash,
+	}
+	err = createNewUser(&newUser, db)
+	if err != nil {
+		responses.GenericInternalServerError(c.Writer)
+		return
+	}
+
+	jwtUserData := jwt.User{
+		Username: newUser.Name,
+		UserId:   newUser.ID.String(),
+	}
+
+	refreshToken, err := jwt.CreateRefreshToken(jwtUserData, false, db)
+	if err != nil {
+		responses.GenericInternalServerError(c.Writer)
+		return
+	}
+
+	jwtToken, err := jwt.CreateToken(jwtUserData)
+	if err != nil {
+		log.Println(err)
+		responses.GenericInternalServerError(c.Writer)
+		return
+	}
+
+	c.Header("Authorization", jwtToken)
+	c.Header("RefreshToken", refreshToken)
+
+	c.JSON(http.StatusOK, "")
 }
 
 func Login(c *gin.Context, db *gorm.DB) {

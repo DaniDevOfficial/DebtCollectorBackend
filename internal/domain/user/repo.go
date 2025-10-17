@@ -24,3 +24,8 @@ func getUserByName(username string, db *gorm.DB) (User, error) {
 	result := db.Where("name = ?", username).First(&user)
 	return user, result.Error
 }
+
+func createNewUser(newUser *User, db *gorm.DB) error {
+	result := db.Create(newUser)
+	return result.Error
+}

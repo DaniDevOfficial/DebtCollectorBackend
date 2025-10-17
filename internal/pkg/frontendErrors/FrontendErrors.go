@@ -9,5 +9,6 @@ const (
 
 	NotAllowedToPerformActionError = "youAreNotAllowedToPerformThisAction"
 
-	UsernameOrPasswordAreWrong = "usernameOrPasswordAreWrong"
+	UsernameOrPasswordAreWrong  = "usernameOrPasswordAreWrong"
+	UsernameOrEmailAlreadyTaken = "usernameOrEmailAlreadyTaken"
 )
