@@ -2,11 +2,15 @@ package main
 
 import (
 	"dept-collector/internal/api"
+	"dept-collector/internal/config"
 
 	_ "github.com/gin-gonic/gin"
 )
 
 func main() {
-	router := api.NewRouter()
+
+	db := config.ConnectDB()
+
+	router := api.NewRouter(db)
 	router.Run()
 }
