@@ -8,4 +8,6 @@ const (
 	BadRequestError     = "badRequestError"
 
 	NotAllowedToPerformActionError = "youAreNotAllowedToPerformThisAction"
+
+	UsernameOrPasswordAreWrong = "usernameOrPasswordAreWrong"
 )
