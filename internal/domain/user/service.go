@@ -1,6 +1,7 @@
 package user
 
 import (
+	"dept-collector/internal/models"
 	"dept-collector/internal/pkg/frontendErrors"
 	"dept-collector/internal/pkg/hashing"
 	"dept-collector/internal/pkg/jwt"
@@ -36,7 +37,7 @@ func SignUp(c *gin.Context, db *gorm.DB) {
 		return
 	}
 
-	newUser := User{
+	newUser := models.User{
 		Name:     newAccountRequest.Username,
 		Email:    newAccountRequest.Email,
 		Password: passwordHash,

@@ -1,6 +1,7 @@
 package jwt
 
 import (
+	"dept-collector/internal/models"
 	"encoding/base64"
 	"encoding/json"
 	"errors"
@@ -84,7 +85,7 @@ func VerifyRefreshToken(tokenString string, db *gorm.DB) (Payload, error) {
 
 func VerifyRefreshTokenInDB(token string, userId string, db *gorm.DB) (bool, error) {
 
-	var tokenData RefreshToken
+	var tokenData models.RefreshToken
 	result := db.Where("refresh_token = ?", token).First(&tokenData)
 
 	if result.Error != nil {
@@ -167,7 +168,7 @@ func DecodeBearer(tokenString string) (Payload, error) {
 }
 
 func PushRefreshTokenToDB(data CreateTokenInput, db *gorm.DB) error {
-	token := RefreshToken{
+	token := models.RefreshToken{
 		UserID:       data.UserID,
 		RefreshToken: data.RefreshToken,
 		ExpiresAt:    data.ExpiresAt,
@@ -181,6 +182,6 @@ func PushRefreshTokenToDB(data CreateTokenInput, db *gorm.DB) error {
 }
 
 func VoidRefreshTokenInDB(token string, db *gorm.DB) error {
-	db.Delete(&RefreshToken{RefreshToken: token})
+	db.Delete(&models.RefreshToken{RefreshToken: token})
 	return nil
 }
