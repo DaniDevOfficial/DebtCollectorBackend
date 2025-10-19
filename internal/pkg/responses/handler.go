@@ -30,8 +30,12 @@ func HttpErrorResponse(w http.ResponseWriter, statusCode int, error string, mess
 func GenericInternalServerError(w http.ResponseWriter) {
 	HttpErrorResponse(w, http.StatusInternalServerError, frontendErrors.InternalServerError, "An unexpected error occurred")
 }
-func GenericBadRequestError(w http.ResponseWriter) {
-	HttpErrorResponse(w, http.StatusBadRequest, frontendErrors.BadRequestError, "The request was invalid")
+func GenericBadRequestError(w http.ResponseWriter, message ...string) {
+	msg := "The request was invalid"
+	if len(message) > 0 {
+		msg = message[0]
+	}
+	HttpErrorResponse(w, http.StatusBadRequest, frontendErrors.BadRequestError, msg)
 }
 func GenericUnauthorizedError(w http.ResponseWriter) {
 	HttpErrorResponse(w, http.StatusUnauthorized, frontendErrors.UnauthorizedError, "You are not authorized to perform this action")
