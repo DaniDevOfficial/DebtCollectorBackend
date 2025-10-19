@@ -7,6 +7,7 @@ import (
 	"os"
 
 	"gorm.io/driver/postgres"
+	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
 )
 
@@ -37,4 +38,13 @@ func AutoMigrate(db *gorm.DB) {
 		log.Fatal("Migration failed:", err)
 	}
 	log.Println("✅ AutoMigration complete!")
+}
+
+func connectMockDB() *gorm.DB {
+	db, err := gorm.Open(sqlite.Open(":memory:"), &gorm.Config{})
+	if err != nil {
+		log.Fatal("failed to connect to mock DB:", err)
+	}
+	log.Println("Using in-memory SQLite DB (mock mode)")
+	return db
 }

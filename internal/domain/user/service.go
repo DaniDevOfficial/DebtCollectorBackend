@@ -15,6 +15,17 @@ import (
 	"gorm.io/gorm"
 )
 
+// SignUp godoc
+// @Summary      Register a new user
+// @Description  Creates a new account and returns JWT + refresh token
+// @Tags         auth
+// @Accept       json
+// @Produce      json
+// @Param        request body CreateNewUserRequest true "New account data"
+// @Success      200  {string}  string  "JWT and Refresh tokens in headers"
+// @Failure      400  {string}  bad Request
+// @Failure      500  {string}  internal server error
+// @Router       /user/signup [post]
 func SignUp(c *gin.Context, db *gorm.DB) {
 	var newAccountRequest CreateNewUserRequest
 	if err := c.ShouldBind(&newAccountRequest); err != nil {
