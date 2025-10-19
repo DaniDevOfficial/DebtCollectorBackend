@@ -8,7 +8,7 @@ import (
 )
 
 func RegisterUserRoutes(router *gin.RouterGroup, db *gorm.DB) {
-	RegisterUserRoutes(router, db)
+	RegisterAuthRoutes(router, db)
 }
 
 func RegisterAuthRoutes(router *gin.RouterGroup, db *gorm.DB) {
@@ -18,5 +18,9 @@ func RegisterAuthRoutes(router *gin.RouterGroup, db *gorm.DB) {
 
 	router.POST("/signup", func(c *gin.Context) {
 		user.SignUp(c, db)
+	})
+
+	router.GET("/checkAuth", func(c *gin.Context) {
+		user.CheckAuth(c, db)
 	})
 }

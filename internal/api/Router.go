@@ -13,6 +13,7 @@ func NewRouter(db *gorm.DB) *gin.Engine {
 	basePath := router.Group("/api")
 
 	handlers.RegisterDevRoutes(basePath.Group("/dev"))
+	handlers.RegisterUserRoutes(basePath.Group("/user"), db)
 
 	return router
 }

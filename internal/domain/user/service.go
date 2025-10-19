@@ -2,6 +2,7 @@ package user
 
 import (
 	"dept-collector/internal/models"
+	"dept-collector/internal/pkg/auth"
 	"dept-collector/internal/pkg/frontendErrors"
 	"dept-collector/internal/pkg/hashing"
 	"dept-collector/internal/pkg/jwt"
@@ -112,6 +113,16 @@ func Login(c *gin.Context, db *gorm.DB) {
 	}
 	c.Header("Authorization", jwtToken)
 	c.Header("RefreshToken", refreshToken)
+
+	c.JSON(http.StatusOK, "")
+}
+
+func CheckAuth(c *gin.Context, db *gorm.DB) {
+	_, err := auth.AuthenticateByHeader(c, db)
+	if err != nil {
+		responses.GenericUnauthorizedError(c.Writer)
+		return
+	}
 
 	c.JSON(http.StatusOK, "")
 }

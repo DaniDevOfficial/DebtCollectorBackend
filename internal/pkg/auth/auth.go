@@ -16,7 +16,7 @@ func GetJWTTokenFromHeader(c *gin.Context) (string, error) {
 	return jwtString, nil
 }
 
-// GetJWTPayloadFromHeader extracts the JWT payload from the Authorization header of an HTTP request.
+// AuthenticateByHeader extracts the JWT payload from the Authorization header of an HTTP request.
 // It first retrieves the JWT token from the header, verifies the token, and then decodes the payload.
 //
 // Parameters:
@@ -26,7 +26,7 @@ func GetJWTTokenFromHeader(c *gin.Context) (string, error) {
 // Returns:
 //
 //	(jwt.JWTPayload, error): Returns the decoded JWT payload if successful, otherwise returns an error.
-func GetJWTPayloadFromHeader(c *gin.Context, db *gorm.DB) (jwt.Payload, error) {
+func AuthenticateByHeader(c *gin.Context, db *gorm.DB) (jwt.Payload, error) {
 	jwtToken, err := GetJWTTokenFromHeader(c)
 	var jwtData jwt.Payload
 	if err != nil {
@@ -57,7 +57,7 @@ func GetJWTPayloadFromHeader(c *gin.Context, db *gorm.DB) (jwt.Payload, error) {
 	return jwtData, err
 }
 
-func GetRefreshTokenFromHeader(c *gin.Context) (string, error) {
+func getRefreshTokenFromHeader(c *gin.Context) (string, error) {
 	refreshToken := c.Request.Header.Get("RefreshToken")
 	if refreshToken == "" {
 		return "", fmt.Errorf("missing refresh token header")
@@ -67,7 +67,7 @@ func GetRefreshTokenFromHeader(c *gin.Context) (string, error) {
 }
 
 func CreateNewTokenWithRefreshToken(c *gin.Context, db *gorm.DB) (jwt.Payload, string, error) {
-	refreshToken, err := GetRefreshTokenFromHeader(c)
+	refreshToken, err := getRefreshTokenFromHeader(c)
 	var jwtData jwt.Payload
 	if err != nil {
 		return jwtData, "", err
