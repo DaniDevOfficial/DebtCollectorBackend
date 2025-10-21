@@ -63,7 +63,7 @@ func CreateNewSkipEntry(c *gin.Context, db *gorm.DB) {
 
 func EditSkipEntry(c *gin.Context, db *gorm.DB) {
 	var newEntryRequest EditSkipEntryRequest
-	if err := c.ShouldBind(&newEntryRequest); err != nil {
+	if err := c.ShouldBindJSON(&newEntryRequest); err != nil {
 		responses.GenericBadRequestError(c.Writer)
 		return
 	}
@@ -115,4 +115,91 @@ func EditSkipEntry(c *gin.Context, db *gorm.DB) {
 	}
 
 	c.JSON(http.StatusCreated, updateEntry)
+}
+
+func DeleteSkipEntry(c *gin.Context, db *gorm.DB) {
+	var deleteEntryRequest SingleIdRequest
+
+	if err := c.ShouldBindJSON(&deleteEntryRequest); err != nil {
+		responses.GenericBadRequestError(c.Writer)
+		return
+	}
+
+	_, err := auth.AuthenticateByHeader(c, db)
+	if err != nil {
+		responses.GenericUnauthorizedError(c.Writer)
+		return
+	}
+
+	entryId, err := uuid.Parse(deleteEntryRequest.ID)
+	if err != nil {
+		responses.GenericBadRequestError(c.Writer, "Invalid ID structure")
+		return
+	}
+
+	err = deleteSkipEntry(entryId, db)
+	if err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			responses.GenericNotFoundError(c.Writer)
+			return
+		}
+		responses.GenericInternalServerError(c.Writer)
+		return
+	}
+
+	c.JSON(http.StatusNoContent, nil)
+}
+
+func GetSpecificSkipEntry(c *gin.Context, db *gorm.DB) {
+	var getEntryRequest SingleIdRequest
+	if err := c.ShouldBindJSON(&getEntryRequest); err != nil {
+		responses.GenericBadRequestError(c.Writer)
+		return
+	}
+	_, err := auth.AuthenticateByHeader(c, db)
+	if err != nil {
+		responses.GenericUnauthorizedError(c.Writer)
+		return
+	}
+	entryId, err := uuid.Parse(getEntryRequest.ID)
+	if err != nil {
+		responses.GenericBadRequestError(c.Writer, "Invalid ID structure")
+		return
+	}
+	entry, err := getSpecificEntry(entryId, db)
+	if err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			responses.GenericNotFoundError(c.Writer)
+			return
+		}
+		responses.GenericInternalServerError(c.Writer)
+		return
+	}
+
+	c.JSON(http.StatusOK, entry)
+}
+
+func GetFilteredSkipEntries(c *gin.Context, db *gorm.DB) {
+	var getEntryRequest FilterSkipEntryRequest
+	if err := c.ShouldBindJSON(&getEntryRequest); err != nil {
+		responses.GenericBadRequestError(c.Writer)
+		return
+	}
+	_, err := auth.AuthenticateByHeader(c, db)
+	if err != nil {
+		responses.GenericUnauthorizedError(c.Writer)
+		return
+	}
+
+	entries, err := getAllEntries(getEntryRequest, db)
+	if err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			responses.GenericNotFoundError(c.Writer)
+			return
+		}
+		responses.GenericInternalServerError(c.Writer)
+		return
+	}
+
+	c.JSON(http.StatusOK, entries)
 }

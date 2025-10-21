@@ -15,4 +15,20 @@ func registerCRUDSkipEntryRoutes(router *gin.RouterGroup, db *gorm.DB) {
 	router.POST("/create", func(c *gin.Context) {
 		skipEntry.CreateNewSkipEntry(c, db)
 	})
+
+	router.PUT("/edit", func(c *gin.Context) {
+		skipEntry.EditSkipEntry(c, db)
+	})
+
+	router.DELETE("/delete", func(c *gin.Context) {
+		skipEntry.DeleteSkipEntry(c, db)
+	})
+
+	router.GET("/single", func(c *gin.Context) {
+		skipEntry.GetSpecificSkipEntry(c, db)
+	})
+
+	router.GET("/filtered", func(c *gin.Context) {
+		skipEntry.GetFilteredSkipEntries(c, db)
+	})
 }

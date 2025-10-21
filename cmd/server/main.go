@@ -3,7 +3,7 @@ package main
 import (
 	"dept-collector/internal/api"
 	"dept-collector/internal/config"
-	"os"
+	"dept-collector/internal/pkg/validator"
 
 	_ "github.com/gin-gonic/gin"
 )
@@ -17,6 +17,8 @@ func main() {
 
 	db := config.ConnectDB()
 	config.AutoMigrate(db)
+
+	validator.InitCustomValidators()
 
 	router := api.NewRouter(db)
 	router.Run()
