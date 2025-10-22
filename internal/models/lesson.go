@@ -7,7 +7,7 @@ import (
 )
 
 type Lesson struct {
-	ID            uuid.UUID `gorm:"type:uuid;default:uuid_generate_v4();primaryKey"`
+	ID            uuid.UUID `gorm:"type:uuid;primaryKey"`
 	Name          string    `gorm:"type:varchar(100);not null"`
 	StartDateTime time.Time `gorm:"not null"`
 	EndDateTime   time.Time `gorm:"not null"`

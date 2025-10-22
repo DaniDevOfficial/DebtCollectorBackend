@@ -7,14 +7,31 @@ import (
 	"gorm.io/gorm"
 )
 
-func createSkipEntry(entry models.SkipEntry, db *gorm.DB) error {
+func createSkipEntry(entry *models.SkipEntry, db *gorm.DB) error {
 	result := db.Create(entry)
+	if result.Error != nil {
+		return result.Error
+	}
+
+	if err := db.Preload("Amount").Preload("User").Preload("Lesson").
+		First(entry, "id = ?", entry.ID).Error; err != nil {
+		return err
+	}
+
 	return result.Error
 }
 
 func updateSkipEntry(entry *models.SkipEntry, db *gorm.DB) error {
-	result := db.Save(entry)
-	return result.Error
+	if err := db.Save(entry).Error; err != nil {
+		return err
+	}
+
+	if err := db.Preload("Amount").Preload("User").Preload("Lesson").
+		First(entry, "id = ?", entry.ID).Error; err != nil {
+		return err
+	}
+
+	return nil
 }
 
 func deleteSkipEntry(id uuid.UUID, db *gorm.DB) error {

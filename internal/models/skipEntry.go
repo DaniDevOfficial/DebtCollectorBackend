@@ -7,7 +7,7 @@ import (
 )
 
 type SkipEntry struct {
-	ID     uuid.UUID `gorm:"type:uuid;default:uuid_generate_v4();primaryKey"`
+	ID     uuid.UUID `gorm:"type:uuid;primaryKey"`
 	Reason string    `gorm:"type:text;not null"`
 
 	UserID uuid.UUID `gorm:"type:uuid;default:"`

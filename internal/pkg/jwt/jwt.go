@@ -169,6 +169,7 @@ func DecodeBearer(tokenString string) (Payload, error) {
 
 func PushRefreshTokenToDB(data CreateTokenInput, db *gorm.DB) error {
 	token := models.RefreshToken{
+		ID:           uuid.New(),
 		UserID:       data.UserID,
 		RefreshToken: data.RefreshToken,
 		ExpiresAt:    data.ExpiresAt,

@@ -16,7 +16,7 @@ import (
 func main() {
 
 	db := config.ConnectDB()
-	config.AutoMigrate(db)
+	//config.AutoMigrate(db)
 
 	validator.InitCustomValidators()
 

@@ -7,7 +7,7 @@ import (
 )
 
 type Class struct {
-	ID         string    `gorm:"primaryKey;type:uuid;default:uuid_generate_v4()"`
+	ID         string    `gorm:"primaryKey;type:uuid;"`
 	Name       string    `gorm:"type:varchar(100);not null"`
 	SemesterID uuid.UUID `gorm:"type:uuid;not null;index"`
 	Semester   Semester  `gorm:"constraint:OnUpdate:CASCADE,OnDelete:CASCADE;"`

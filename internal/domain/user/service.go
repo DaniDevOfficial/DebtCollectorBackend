@@ -12,6 +12,7 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
+	"github.com/google/uuid"
 	"gorm.io/gorm"
 )
 
@@ -49,6 +50,7 @@ func SignUp(c *gin.Context, db *gorm.DB) {
 	}
 
 	newUser := models.User{
+		ID:       uuid.New(),
 		Name:     newAccountRequest.Username,
 		Email:    newAccountRequest.Email,
 		Password: passwordHash,

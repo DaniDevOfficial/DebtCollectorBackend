@@ -7,7 +7,7 @@ import (
 )
 
 type RefreshToken struct {
-	ID           uuid.UUID `gorm:"type:uuid;default:uuid_generate_v4();primaryKey"`
+	ID           uuid.UUID `gorm:"type:uuid;primaryKey"`
 	RefreshToken string    `gorm:"type:text;not null;unique"`
 	UserID       uuid.UUID `gorm:"type:uuid;not null;index"` // FK field
 	User         User      `gorm:"constraint:OnUpdate:CASCADE,OnDelete:CASCADE;"`

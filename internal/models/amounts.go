@@ -7,7 +7,7 @@ import (
 )
 
 type Amount struct {
-	ID     uuid.UUID `gorm:"type:uuid;default:uuid_generate_v4();primaryKey"`
+	ID     uuid.UUID `gorm:"type:uuid;primaryKey"`
 	Value  float64   `gorm:"type:numeric(10,2);not null"`
 	Name   string    `gorm:"type:varchar(255);not null"`
 	Reason string    `gorm:"type:text;not null"`

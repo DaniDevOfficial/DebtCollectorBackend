@@ -38,6 +38,7 @@ func CreateNewSkipEntry(c *gin.Context, db *gorm.DB) {
 	}
 
 	newEntry := models.SkipEntry{
+		ID:     uuid.New(),
 		Reason: newEntryRequest.Reason,
 	}
 
@@ -62,7 +63,7 @@ func CreateNewSkipEntry(c *gin.Context, db *gorm.DB) {
 	}
 	newEntry.AmountID = amountId
 
-	err = createSkipEntry(newEntry, db)
+	err = createSkipEntry(&newEntry, db)
 	if err != nil {
 		responses.GenericInternalServerError(c.Writer)
 		return
@@ -72,6 +73,17 @@ func CreateNewSkipEntry(c *gin.Context, db *gorm.DB) {
 
 }
 
+// EditSkipEntry godoc
+// @Summary      Edit a Skip entry
+// @Description  Edit a skip entry based on id and returns the new entry
+// @Tags         SkipEntries
+// @Accept       json
+// @Produce      json
+// @Param        request body EditSkipEntryRequest true "Edit skip entry"
+// @Success      200  {string}  models.SkipEntry
+// @Failure      400  {string}  bad Request
+// @Failure      500  {string}  internal server error
+// @Router       /skips/create [post]
 func EditSkipEntry(c *gin.Context, db *gorm.DB) {
 	var newEntryRequest EditSkipEntryRequest
 	if err := c.ShouldBindJSON(&newEntryRequest); err != nil {
