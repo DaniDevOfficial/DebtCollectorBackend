@@ -20,7 +20,6 @@ import (
 // @Description  Creates a new account and returns JWT + refresh token
 // @Tags         auth
 // @Accept       json
-// @Produce      json
 // @Param        request body CreateNewUserRequest true "New account data"
 // @Success      200  {string}  string  "JWT and Refresh tokens in headers"
 // @Failure      400  {string}  bad Request
@@ -84,6 +83,16 @@ func SignUp(c *gin.Context, db *gorm.DB) {
 	c.JSON(http.StatusOK, "")
 }
 
+// Login godoc
+// @Summary      Login to a existing account
+// @Description  Login into account and returns JWT + refresh token
+// @Tags         auth
+// @Accept       json
+// @Param        request body LoginRequest true "Login credentials"
+// @Success      200  {string}  string  "JWT and Refresh tokens in headers"
+// @Failure      400  {string}  bad Request
+// @Failure      500  {string}  internal server error
+// @Router       /user/login [post]
 func Login(c *gin.Context, db *gorm.DB) {
 	var loginRequest LoginRequest
 
@@ -128,6 +137,13 @@ func Login(c *gin.Context, db *gorm.DB) {
 	c.JSON(http.StatusOK, "")
 }
 
+// CheckAuth godoc
+// @Summary      Check the auth status
+// @Description  Checks the auth status of a refresh and jwt token "JWT and Refresh tokens in headers"
+// @Tags         auth
+// @Success      200  {string}  auth is valid
+// @Failure      401  {string}  auth is not valid
+// @Router       /user/checkAuth [get]
 func CheckAuth(c *gin.Context, db *gorm.DB) {
 	_, err := auth.AuthenticateByHeader(c, db)
 	if err != nil {

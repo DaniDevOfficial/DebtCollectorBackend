@@ -12,6 +12,17 @@ import (
 	"gorm.io/gorm"
 )
 
+// CreateNewSkipEntry godoc
+// @Summary      Creates a new Skip entry
+// @Description  Creates a new Skip entry and returns said entry
+// @Tags         SkipEntries
+// @Accept       json
+// @Produce      json
+// @Param        request body CreateNewEntryRequest true "Create new Skipentry"
+// @Success      200  {string}  models.SkipEntry
+// @Failure      400  {string}  bad Request
+// @Failure      500  {string}  internal server error
+// @Router       /skips/create [post]
 func CreateNewSkipEntry(c *gin.Context, db *gorm.DB) {
 	var newEntryRequest CreateNewEntryRequest
 
