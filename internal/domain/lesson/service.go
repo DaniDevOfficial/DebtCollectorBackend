@@ -51,3 +51,114 @@ func CreateNewLesson(c *gin.Context, db *gorm.DB) {
 
 	c.JSON(http.StatusCreated, lesson)
 }
+
+func EditLesson(c *gin.Context, db *gorm.DB) {
+	var editLessonRequest EditLessonRequest
+	if err := c.ShouldBind(&editLessonRequest); err != nil {
+		responses.GenericBadRequestError(c.Writer)
+		return
+	}
+
+	_, err := auth.AuthenticateByHeader(c, db)
+	if err != nil {
+		responses.GenericUnauthorizedError(c.Writer)
+		return
+	}
+
+	lesson := models.Lesson{
+		Name:          editLessonRequest.Name,
+		StartDateTime: editLessonRequest.StartDate,
+		EndDateTime:   editLessonRequest.EndDate,
+	}
+
+	id, err := uuid.Parse(editLessonRequest.ID)
+	if err != nil {
+		responses.GenericBadRequestError(c.Writer, "Invalid id")
+		return
+	}
+	lesson.ID = id
+
+	classId, err := uuid.Parse(editLessonRequest.ClassId)
+	if err != nil {
+		responses.GenericBadRequestError(c.Writer, "Invalid classId")
+		return
+	}
+	lesson.ClassID = classId
+
+	err = updateLesson(lesson, db)
+	if err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			responses.GenericNotFoundError(c.Writer)
+			return
+		}
+		responses.GenericInternalServerError(c.Writer)
+		return
+	}
+	c.JSON(http.StatusOK, lesson)
+}
+
+func DeleteLesson(c *gin.Context, db *gorm.DB) {
+
+	var lessonToDelete SpecificLessonRequest
+
+	if err := c.ShouldBind(&lessonToDelete); err != nil {
+		responses.GenericBadRequestError(c.Writer)
+		return
+	}
+
+	_, err := auth.AuthenticateByHeader(c, db)
+	if err != nil {
+		responses.GenericUnauthorizedError(c.Writer)
+		return
+	}
+
+	id, err := uuid.Parse(lessonToDelete.ID)
+	if err != nil {
+		responses.GenericBadRequestError(c.Writer, "Invalid id")
+		return
+	}
+
+	err = deleteLesson(id, db)
+	if err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			responses.GenericNotFoundError(c.Writer)
+			return
+		}
+		responses.GenericInternalServerError(c.Writer)
+		return
+	}
+	c.JSON(http.StatusOK, nil)
+}
+
+func GetSpecificLesson(c *gin.Context, db *gorm.DB) {
+	var lessonToGet SpecificLessonRequest
+	if err := c.ShouldBind(&lessonToGet); err != nil {
+		responses.GenericBadRequestError(c.Writer)
+		return
+	}
+
+	_, err := auth.AuthenticateByHeader(c, db)
+	if err != nil {
+		responses.GenericUnauthorizedError(c.Writer)
+		return
+	}
+
+	id, err := uuid.Parse(lessonToGet.ID)
+	if err != nil {
+		responses.GenericBadRequestError(c.Writer, "Invalid id")
+		return
+	}
+
+	lesson, err := getLesson(id, db)
+
+	if err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			responses.GenericNotFoundError(c.Writer)
+			return
+		}
+		responses.GenericInternalServerError(c.Writer)
+		return
+	}
+
+	c.JSON(http.StatusOK, lesson)
+}

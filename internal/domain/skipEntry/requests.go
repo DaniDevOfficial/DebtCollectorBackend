@@ -29,5 +29,5 @@ type FilterSkipEntryRequest struct {
 	StartDate  *time.Time `json:"startDate" binding:"omitempty,dateTime"`
 	EndDate    *time.Time `json:"endDate" binding:"omitempty,dateTime"`
 	SemesterID *string    `json:"semesterId" binding:"omitempty,uuid"`
-	ClassID    *string    `json:"class_id" binding:"omitempty,uuid"`
+	ClassID    *string    `json:"classId" binding:"omitempty,uuid"`
 }
