@@ -11,7 +11,7 @@ type Semester struct {
 	Name      string    `gorm:"type:varchar(100);not null"`
 	StartDate time.Time `gorm:"not null"`
 	EndDate   time.Time `gorm:"not null"`
-	Classes   []Class   `gorm:"foreignKey:SemesterID"`
+	Classes   []Class   `gorm:"foreignKey:semester_id"`
 
 	CreatedAt time.Time `gorm:"type:timestampz;not null;autoCreateTimes"`
 	UpdatedAt time.Time `gorm:"type:timestampz;not null;autoCreateTimes;autoUpdateTimess"`

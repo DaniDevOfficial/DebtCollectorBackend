@@ -36,3 +36,10 @@ func getLesson(id uuid.UUID, db *gorm.DB) (models.Lesson, error) {
 	result := db.Preload("Class").Preload("Semester").Where("id = ?", id).First(&lesson)
 	return lesson, result.Error
 }
+
+func getAllLessonsWithSkipEntries(filters FilterLessonRequest, db *gorm.DB) ([]models.Lesson, error) {
+	var lessons []models.Lesson
+	query := ApplyLessonFilters(filters, db)
+	err := query.Find(&lessons).Error
+	return lessons, err
+}

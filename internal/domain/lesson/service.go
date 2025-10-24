@@ -162,3 +162,24 @@ func GetSpecificLesson(c *gin.Context, db *gorm.DB) {
 
 	c.JSON(http.StatusOK, lesson)
 }
+
+func GetFilteredLessonsWithSkipEntries(c *gin.Context, db *gorm.DB) {
+	var filterLessonRequest FilterLessonRequest
+	if err := c.ShouldBind(&filterLessonRequest); err != nil {
+		responses.GenericBadRequestError(c.Writer)
+		return
+	}
+
+	_, err := auth.AuthenticateByHeader(c, db)
+	if err != nil {
+		responses.GenericUnauthorizedError(c.Writer)
+		return
+	}
+
+	lessons, err := getAllLessonsWithSkipEntries(filterLessonRequest, db)
+	if err != nil {
+		responses.GenericInternalServerError(c.Writer)
+		return
+	}
+	c.JSON(http.StatusOK, lessons)
+}
