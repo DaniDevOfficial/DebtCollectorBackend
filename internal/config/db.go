@@ -12,12 +12,11 @@ import (
 )
 
 func ConnectDB() *gorm.DB {
-	return connectMockDB()
 	dsn := fmt.Sprintf(
 		"host=%s user=%s password=%s dbname=%s port=%s sslmode=disable",
 		os.Getenv("DB_HOST"),
 		os.Getenv("DB_USER"),
-		os.Getenv("DB_PASS"),
+		os.Getenv("DB_PASSWORD"),
 		os.Getenv("DB_NAME"),
 		os.Getenv("DB_PORT"),
 	)
@@ -34,6 +33,11 @@ func AutoMigrate(db *gorm.DB) {
 	err := db.AutoMigrate(
 		&models.User{},
 		&models.RefreshToken{},
+		&models.Semester{},
+		&models.Amount{},
+		&models.Class{},
+		&models.Lesson{},
+		&models.SkipEntry{},
 	)
 	if err != nil {
 		log.Fatal("Migration failed:", err)

@@ -12,6 +12,6 @@ type Class struct {
 	SemesterID uuid.UUID `gorm:"type:uuid;not null;index"`
 	Semester   Semester  `gorm:"constraint:OnUpdate:CASCADE,OnDelete:CASCADE;"`
 
-	CreatedAt time.Time `gorm:"type:timestampz;not null;autoCreateTimes"`
-	UpdatedAt time.Time `gorm:"type:timestampz;not null;autoCreateTimes;autoUpdateTimess"`
+	CreatedAt time.Time `gorm:"type:timestamptz;not null;autoCreateTimes"`
+	UpdatedAt time.Time `gorm:"type:timestamptz;not null;autoCreateTimes;autoUpdateTimes"`
 }

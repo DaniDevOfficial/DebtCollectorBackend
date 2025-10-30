@@ -13,5 +13,5 @@ type Amount struct {
 	Reason string    `gorm:"type:text;not null"`
 
 	CreatedAt time.Time `gorm:"type:timestamptz;autoCreateTime"`
-	UpdatedAt time.Time `gorm:"type:timestamptz;autoUpdateTime"`
+	UpdatedAt time.Time `gorm:"type:timestamptz;autoUpdateTime;autoUpdateTime"`
 }

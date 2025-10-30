@@ -19,6 +19,6 @@ type SkipEntry struct {
 	AmountID uuid.UUID `gorm:"type:uuid;not null;index"`
 	Amount   Amount    `gorm:"foreignKey:AmountID;constraint:OnUpdate:CASCADE,OnDelete:RESTRICT;"`
 
-	CreatedAt time.Time `gorm:"type:timestampz;not null;autoCreateTimes"`
+	CreatedAt time.Time `gorm:"type:timestamptz;not null;autoCreateTimes"`
 	UpdatedAt time.Time `gorm:"type:timestamptz;not null;autoCreateTime;autoUpdateTime"`
 }
