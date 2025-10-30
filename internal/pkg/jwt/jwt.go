@@ -74,6 +74,7 @@ func VerifyRefreshToken(tokenString string, db *gorm.DB) (Payload, error) {
 
 	inDB, err := VerifyRefreshTokenInDB(tokenString, payload.UserId, db)
 	if err != nil {
+		log.Println(err)
 		return payload, err
 	}
 	if !inDB {
@@ -84,10 +85,8 @@ func VerifyRefreshToken(tokenString string, db *gorm.DB) (Payload, error) {
 }
 
 func VerifyRefreshTokenInDB(token string, userId string, db *gorm.DB) (bool, error) {
-
 	var tokenData models.RefreshToken
 	result := db.Where("refresh_token = ?", token).First(&tokenData)
-
 	if result.Error != nil {
 		if errors.Is(result.Error, gorm.ErrRecordNotFound) {
 			return false, nil
@@ -95,10 +94,9 @@ func VerifyRefreshTokenInDB(token string, userId string, db *gorm.DB) (bool, err
 		return false, result.Error
 	}
 
-	if (tokenData.UserID.String() == userId) || (tokenData.ExpiresAt.Before(time.Now())) {
+	if (tokenData.UserID.String() != userId) || (tokenData.ExpiresAt.Before(time.Now())) {
 		return false, nil
 	}
-
 	return true, nil
 }
 

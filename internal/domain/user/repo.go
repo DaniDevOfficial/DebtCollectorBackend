@@ -9,14 +9,17 @@ import (
 
 func isUsernameOrEmailTaken(username string, email string, db *gorm.DB) (bool, error) {
 	var user models.User
-	result := db.Where("name = ?", username).Or("email = ?", email).First(&user)
+
+	result := db.Where("name = ? OR email = ?", username, email).First(&user)
+
+	if errors.Is(result.Error, gorm.ErrRecordNotFound) {
+		return false, nil
+	}
 
 	if result.Error != nil {
-		if errors.Is(result.Error, gorm.ErrRecordNotFound) {
-			return false, nil
-		}
 		return false, result.Error
 	}
+
 	return true, nil
 }
 

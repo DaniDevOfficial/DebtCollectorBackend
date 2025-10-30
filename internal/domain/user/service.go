@@ -82,7 +82,7 @@ func SignUp(c *gin.Context, db *gorm.DB) {
 	c.Header("Authorization", jwtToken)
 	c.Header("RefreshToken", refreshToken)
 
-	c.JSON(http.StatusOK, "")
+	c.JSON(http.StatusOK, "created Account")
 }
 
 // Login godoc
@@ -98,7 +98,8 @@ func SignUp(c *gin.Context, db *gorm.DB) {
 func Login(c *gin.Context, db *gorm.DB) {
 	var loginRequest LoginRequest
 
-	if err := c.ShouldBind(&loginRequest); err != nil {
+	if err := c.ShouldBindJSON(&loginRequest); err != nil {
+		log.Println(err)
 		responses.GenericBadRequestError(c.Writer)
 		return
 	}

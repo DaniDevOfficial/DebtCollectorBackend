@@ -18,6 +18,7 @@ func NewRouter(db *gorm.DB) *gin.Engine {
 	handlers.RegisterUserRoutes(basePath.Group("/user"), db)
 	handlers.RegisterSkipEntryRoutes(basePath.Group("/skips"), db)
 	handlers.RegisterLessonHandler(basePath.Group("/lesson"), db)
+	handlers.RegisterSemesterRoutes(basePath.Group("/semester"), db)
 
 	return router
 }
