@@ -49,7 +49,16 @@ func CreateNewLesson(c *gin.Context, db *gorm.DB) {
 		return
 	}
 
-	c.JSON(http.StatusCreated, lesson)
+	response := LessonResponse{
+		ID:            lesson.ID,
+		Name:          lesson.Name,
+		StartDateTime: lesson.StartDateTime,
+		EndDateTime:   lesson.EndDateTime,
+		ClassID:       lesson.ClassID,
+		CreatedAt:     lesson.CreatedAt,
+		UpdatedAt:     lesson.UpdatedAt,
+	}
+	c.JSON(http.StatusCreated, response)
 }
 
 func EditLesson(c *gin.Context, db *gorm.DB) {

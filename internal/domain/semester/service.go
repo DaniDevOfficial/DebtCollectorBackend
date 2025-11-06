@@ -19,7 +19,7 @@ import (
 // @Accept       json
 // @Produce      json
 // @Param        request body NewSemesterRequest true "Create new semester"
-// @Success      201  {object}  models.Semester
+// @Success      201  {object}  NewSemesterResponse
 // @Failure      400  {string}  bad request
 // @Failure      401  {string}  unauthorized
 // @Failure      500  {string}  internal server error
@@ -65,6 +65,14 @@ func CreateNewSemester(c *gin.Context, db *gorm.DB) {
 		return
 	}
 
-	c.JSON(http.StatusCreated, newSemester)
+	response := NewSemesterResponse{
+		ID:        newSemester.ID,
+		Name:      newSemester.Name,
+		StartDate: newSemester.StartDate,
+		EndDate:   newSemester.EndDate,
+		CreatedAt: newSemester.CreatedAt,
+		UpdatedAt: newSemester.UpdatedAt,
+	}
 
+	c.JSON(http.StatusCreated, response)
 }

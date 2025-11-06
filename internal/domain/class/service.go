@@ -18,7 +18,7 @@ import (
 // @Accept       json
 // @Produce      json
 // @Param        request body NewClassRequest true "Create new class"
-// @Success      201  {object}  models.Class
+// @Success      201  {object}  NewClassResponse
 // @Failure      400  {string}  bad request
 // @Failure      401  {string}  unauthorized
 // @Failure      500  {string}  internal server error
@@ -58,6 +58,13 @@ func CreateNewClass(c *gin.Context, db *gorm.DB) {
 		responses.GenericInternalServerError(c.Writer)
 		return
 	}
+	response := NewClassResponse{
+		ID:         newClass.ID,
+		Name:       newClass.Name,
+		SemesterID: newClass.SemesterID,
+		CreatedAt:  newClass.CreatedAt,
+		UpdatedAt:  newClass.UpdatedAt,
+	}
 
-	c.JSON(http.StatusCreated, newClass)
+	c.JSON(http.StatusCreated, response)
 }

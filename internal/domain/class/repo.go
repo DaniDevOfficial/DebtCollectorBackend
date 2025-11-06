@@ -17,7 +17,6 @@ func createClass(class *models.Class, db *gorm.DB) error {
 		return err
 	}
 
-	// 💾 Create the class
 	result := db.Create(class)
 	return result.Error
 }
