@@ -4,8 +4,8 @@ import "time"
 
 type NewLessonRequest struct {
 	Name      string    `json:"name" binding:"required"`
-	StartDate time.Time `json:"startDate" binding:"required,date"`
-	EndDate   time.Time `json:"endDate" binding:"required,date"`
+	StartDate time.Time `json:"startDate" binding:"required"`
+	EndDate   time.Time `json:"endDate" binding:"required"`
 	ClassId   string    `json:"classId" binding:"required,uuid"`
 }
 

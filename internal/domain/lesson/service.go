@@ -15,11 +15,10 @@ import (
 
 func CreateNewLesson(c *gin.Context, db *gorm.DB) {
 	var newLessonRequest NewLessonRequest
-	if err := c.ShouldBind(&newLessonRequest); err != nil {
+	if err := c.ShouldBindJSON(&newLessonRequest); err != nil {
 		responses.GenericBadRequestError(c.Writer)
 		return
 	}
-
 	_, err := auth.AuthenticateByHeader(c, db)
 	if err != nil {
 		responses.GenericUnauthorizedError(c.Writer)
@@ -40,7 +39,7 @@ func CreateNewLesson(c *gin.Context, db *gorm.DB) {
 		StartDateTime: newLessonRequest.StartDate,
 		EndDateTime:   newLessonRequest.EndDate,
 	}
-	err = createNewLesson(lesson, db)
+	err = createNewLesson(&lesson, db)
 	if err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			responses.GenericNotFoundError(c.Writer)
@@ -65,7 +64,7 @@ func CreateNewLesson(c *gin.Context, db *gorm.DB) {
 
 func EditLesson(c *gin.Context, db *gorm.DB) {
 	var editLessonRequest EditLessonRequest
-	if err := c.ShouldBind(&editLessonRequest); err != nil {
+	if err := c.ShouldBindJSON(&editLessonRequest); err != nil {
 		responses.GenericBadRequestError(c.Writer)
 		return
 	}
@@ -122,7 +121,7 @@ func DeleteLesson(c *gin.Context, db *gorm.DB) {
 
 	var lessonToDelete SpecificLessonRequest
 
-	if err := c.ShouldBind(&lessonToDelete); err != nil {
+	if err := c.ShouldBindJSON(&lessonToDelete); err != nil {
 		responses.GenericBadRequestError(c.Writer)
 		return
 	}
@@ -153,7 +152,7 @@ func DeleteLesson(c *gin.Context, db *gorm.DB) {
 
 func GetSpecificLesson(c *gin.Context, db *gorm.DB) {
 	var lessonToGet SpecificLessonRequest
-	if err := c.ShouldBind(&lessonToGet); err != nil {
+	if err := c.ShouldBindJSON(&lessonToGet); err != nil {
 		responses.GenericBadRequestError(c.Writer)
 		return
 	}
@@ -197,7 +196,7 @@ func GetSpecificLesson(c *gin.Context, db *gorm.DB) {
 
 func GetFilteredLessonsWithSkipEntries(c *gin.Context, db *gorm.DB) {
 	var filterLessonRequest FilterLessonRequest
-	if err := c.ShouldBind(&filterLessonRequest); err != nil {
+	if err := c.ShouldBindJSON(&filterLessonRequest); err != nil {
 		responses.GenericBadRequestError(c.Writer)
 		return
 	}

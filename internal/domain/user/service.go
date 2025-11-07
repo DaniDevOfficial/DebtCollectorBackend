@@ -28,7 +28,7 @@ import (
 // @Router       /user/signup [post]
 func SignUp(c *gin.Context, db *gorm.DB) {
 	var newAccountRequest CreateNewUserRequest
-	if err := c.ShouldBind(&newAccountRequest); err != nil {
+	if err := c.ShouldBindJSON(&newAccountRequest); err != nil {
 		responses.GenericBadRequestError(c.Writer)
 		return
 	}

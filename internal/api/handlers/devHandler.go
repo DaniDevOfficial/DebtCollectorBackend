@@ -10,4 +10,8 @@ func RegisterDevRoutes(router *gin.RouterGroup) {
 	router.GET("/helloWorld", func(c *gin.Context) {
 		dev.HelloWorld(c)
 	})
+
+	router.GET("/validUUID", func(c *gin.Context) {
+		dev.ValidUUID(c)
+	})
 }
