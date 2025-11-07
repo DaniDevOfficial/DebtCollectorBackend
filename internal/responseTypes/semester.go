@@ -1,4 +1,4 @@
-package semester
+package responseTypes
 
 import (
 	"github.com/google/uuid"

@@ -2,6 +2,7 @@ package lesson
 
 import (
 	"dept-collector/internal/models"
+	"dept-collector/internal/responseTypes"
 
 	"gorm.io/gorm"
 )
@@ -29,4 +30,42 @@ func ApplyLessonFilters(filters FilterLessonRequest, db *gorm.DB) *gorm.DB {
 
 	return query
 
+}
+
+func buildFilteredLessonsResponse(lessons []models.Lesson) []responseTypes.FilteredLesson {
+	filtered := make([]responseTypes.FilteredLesson, 0, len(lessons))
+
+	for _, lesson := range lessons {
+		skipResponses := make([]responseTypes.SkipEntryResponse, 0, len(lesson.SkipEntries))
+		for _, skipEntry := range lesson.SkipEntries {
+
+			skipResponses = append(skipResponses, responseTypes.SkipEntryResponse{
+				ID:         skipEntry.ID,
+				Reason:     skipEntry.Reason,
+				UserID:     skipEntry.UserID,
+				UserName:   skipEntry.User.Name,
+				LessonID:   skipEntry.LessonID,
+				LessonName: lesson.Name,
+				Amount:     skipEntry.Amount.Value,
+				CreatedAt:  skipEntry.CreatedAt,
+				UpdatedAt:  skipEntry.UpdatedAt,
+			})
+		}
+
+		filtered = append(filtered, responseTypes.FilteredLesson{
+			ID:            lesson.ID,
+			Name:          lesson.Name,
+			StartDateTime: lesson.StartDateTime,
+			EndDateTime:   lesson.EndDateTime,
+			ClassID:       lesson.Class.ID,
+			ClassName:     lesson.Class.Name,
+			SemesterID:    lesson.Class.Semester.ID,
+			SemesterName:  lesson.Class.Semester.Name,
+			SkipEntries:   skipResponses,
+			CreatedAt:     lesson.CreatedAt,
+			UpdatedAt:     lesson.UpdatedAt,
+		})
+	}
+
+	return filtered
 }

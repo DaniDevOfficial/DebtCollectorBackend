@@ -4,6 +4,7 @@ import (
 	"dept-collector/internal/models"
 	"dept-collector/internal/pkg/auth"
 	"dept-collector/internal/pkg/responses"
+	"dept-collector/internal/responseTypes"
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
 	"gorm.io/gorm"
@@ -65,7 +66,7 @@ func CreateNewSemester(c *gin.Context, db *gorm.DB) {
 		return
 	}
 
-	response := NewSemesterResponse{
+	response := responseTypes.NewSemesterResponse{
 		ID:        newSemester.ID,
 		Name:      newSemester.Name,
 		StartDate: newSemester.StartDate,

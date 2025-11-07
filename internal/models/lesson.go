@@ -15,6 +15,6 @@ type Lesson struct {
 	Class         Class     `gorm:"constraint:OnUpdate:CASCADE,OnDelete:CASCADE;"`
 
 	SkipEntries []SkipEntry `gorm:"foreignKey:lesson_id"`
-	CreatedAt   time.Time   `gorm:"type:timestamptz;not null;autoCreateTimes"`
-	UpdatedAt   time.Time   `gorm:"type:timestamptz;not null;autoCreateTimes;autoUpdateTimes"`
+	CreatedAt   time.Time   `gorm:"type:timestamptz;not null;autoCreateTime"`
+	UpdatedAt   time.Time   `gorm:"type:timestamptz;not null;autoCreateTime;autoUpdateTimes"`
 }

@@ -13,6 +13,6 @@ type Semester struct {
 	EndDate   time.Time `gorm:"not null"`
 	Classes   []Class   `gorm:"foreignKey:semester_id"`
 
-	CreatedAt time.Time `gorm:"type:timestamptz;not null;autoCreateTimes"`
-	UpdatedAt time.Time `gorm:"type:timestamptz;not null;autoCreateTimes;autoUpdateTimes"`
+	CreatedAt time.Time `gorm:"type:timestamptz;not null;autoCreateTime"`
+	UpdatedAt time.Time `gorm:"type:timestamptz;not null;autoCreateTime;autoUpdateTimes"`
 }

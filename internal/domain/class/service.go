@@ -4,6 +4,7 @@ import (
 	"dept-collector/internal/models"
 	"dept-collector/internal/pkg/auth"
 	"dept-collector/internal/pkg/responses"
+	"dept-collector/internal/responseTypes"
 	"errors"
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
@@ -44,7 +45,7 @@ func CreateNewClass(c *gin.Context, db *gorm.DB) {
 	}
 
 	newClass := models.Class{
-		ID:         uuid.New().String(),
+		ID:         uuid.New(),
 		Name:       newClassRequest.Name,
 		SemesterID: semesterId,
 	}
@@ -58,7 +59,7 @@ func CreateNewClass(c *gin.Context, db *gorm.DB) {
 		responses.GenericInternalServerError(c.Writer)
 		return
 	}
-	response := NewClassResponse{
+	response := responseTypes.NewClassResponse{
 		ID:         newClass.ID,
 		Name:       newClass.Name,
 		SemesterID: newClass.SemesterID,

@@ -4,6 +4,7 @@ import (
 	"dept-collector/internal/models"
 	"dept-collector/internal/pkg/auth"
 	"dept-collector/internal/pkg/responses"
+	"dept-collector/internal/responseTypes"
 	"errors"
 	"net/http"
 
@@ -49,11 +50,12 @@ func CreateNewLesson(c *gin.Context, db *gorm.DB) {
 		return
 	}
 
-	response := LessonResponse{
+	response := responseTypes.LessonResponse{
 		ID:            lesson.ID,
 		Name:          lesson.Name,
 		StartDateTime: lesson.StartDateTime,
 		EndDateTime:   lesson.EndDateTime,
+		ClassName:     lesson.Class.Name,
 		ClassID:       lesson.ClassID,
 		CreatedAt:     lesson.CreatedAt,
 		UpdatedAt:     lesson.UpdatedAt,
@@ -103,7 +105,17 @@ func EditLesson(c *gin.Context, db *gorm.DB) {
 		responses.GenericInternalServerError(c.Writer)
 		return
 	}
-	c.JSON(http.StatusOK, lesson)
+	response := responseTypes.LessonResponse{
+		ID:            lesson.ID,
+		Name:          lesson.Name,
+		StartDateTime: lesson.StartDateTime,
+		EndDateTime:   lesson.EndDateTime,
+		ClassName:     lesson.Class.Name,
+		ClassID:       lesson.ClassID,
+		CreatedAt:     lesson.CreatedAt,
+		UpdatedAt:     lesson.UpdatedAt,
+	}
+	c.JSON(http.StatusOK, response)
 }
 
 func DeleteLesson(c *gin.Context, db *gorm.DB) {
@@ -168,8 +180,19 @@ func GetSpecificLesson(c *gin.Context, db *gorm.DB) {
 		responses.GenericInternalServerError(c.Writer)
 		return
 	}
-
-	c.JSON(http.StatusOK, lesson)
+	response := responseTypes.SpecificLesson{
+		ID:            lesson.ID,
+		Name:          lesson.Name,
+		StartDateTime: lesson.StartDateTime,
+		EndDateTime:   lesson.EndDateTime,
+		ClassID:       lesson.Class.ID,
+		ClassName:     lesson.Class.Name,
+		SemesterID:    lesson.Class.Semester.ID,
+		SemesterName:  lesson.Class.Semester.Name,
+		CreatedAt:     lesson.CreatedAt,
+		UpdatedAt:     lesson.UpdatedAt,
+	}
+	c.JSON(http.StatusOK, response)
 }
 
 func GetFilteredLessonsWithSkipEntries(c *gin.Context, db *gorm.DB) {
@@ -190,5 +213,6 @@ func GetFilteredLessonsWithSkipEntries(c *gin.Context, db *gorm.DB) {
 		responses.GenericInternalServerError(c.Writer)
 		return
 	}
-	c.JSON(http.StatusOK, lessons)
+
+	c.JSON(http.StatusOK, buildFilteredLessonsResponse(lessons))
 }
