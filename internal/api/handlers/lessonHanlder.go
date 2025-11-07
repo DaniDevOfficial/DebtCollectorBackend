@@ -8,23 +8,23 @@ import (
 )
 
 func RegisterLessonHandler(r *gin.RouterGroup, db *gorm.DB) {
-	r.POST("/", func(c *gin.Context) {
+	r.POST("", func(c *gin.Context) {
 		lesson.CreateNewLesson(c, db)
 	})
 
-	r.PUT("/", func(c *gin.Context) {
+	r.PUT("", func(c *gin.Context) {
 		lesson.EditLesson(c, db)
 	})
 
-	r.DELETE("/", func(c *gin.Context) {
+	r.DELETE("", func(c *gin.Context) {
 		lesson.DeleteLesson(c, db)
 	})
 
-	r.GET("/", func(c *gin.Context) {
+	r.GET("", func(c *gin.Context) {
 		lesson.GetSpecificLesson(c, db)
 	})
 
-	r.GET("/all", func(c *gin.Context) {
+	r.GET("/filtered", func(c *gin.Context) {
 		lesson.GetFilteredLessonsWithSkipEntries(c, db)
 	})
 

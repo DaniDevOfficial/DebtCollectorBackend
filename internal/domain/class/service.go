@@ -6,10 +6,11 @@ import (
 	"dept-collector/internal/pkg/responses"
 	"dept-collector/internal/responseTypes"
 	"errors"
+	"net/http"
+
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
 	"gorm.io/gorm"
-	"net/http"
 )
 
 // CreateNewClass godoc
@@ -19,11 +20,11 @@ import (
 // @Accept       json
 // @Produce      json
 // @Param        request body NewClassRequest true "Create new class"
-// @Success      201  {object}  NewClassResponse
+// @Success      201  {object}  responseTypes.NewClassResponse
 // @Failure      400  {string}  bad request
 // @Failure      401  {string}  unauthorized
 // @Failure      500  {string}  internal server error
-// @Router       /classes/create [post]
+// @Router       /classes [post]
 func CreateNewClass(c *gin.Context, db *gorm.DB) {
 	var newClassRequest NewClassRequest
 

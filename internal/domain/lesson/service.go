@@ -14,6 +14,18 @@ import (
 	"gorm.io/gorm"
 )
 
+// CreateNewLesson godoc
+// @Summary      Creates a new lesson
+// @Description  Creates a new lesson and returns it
+// @Tags         Lessons
+// @Accept       json
+// @Produce      json
+// @Param        request body NewLessonRequest true "Create new lesson"
+// @Success      201  {object}  responseTypes.LessonResponse
+// @Failure      400  {string}  bad request
+// @Failure      401  {string}  unauthorized
+// @Failure      500  {string}  internal server error
+// @Router       /lesson [post]
 func CreateNewLesson(c *gin.Context, db *gorm.DB) {
 	var newLessonRequest NewLessonRequest
 	if err := c.ShouldBindJSON(&newLessonRequest); err != nil {
@@ -63,6 +75,18 @@ func CreateNewLesson(c *gin.Context, db *gorm.DB) {
 	c.JSON(http.StatusCreated, response)
 }
 
+// EditLesson godoc
+// @Summary      Edit a lesson
+// @Description  Edit a lesson and returns it
+// @Tags         Lessons
+// @Accept       json
+// @Produce      json
+// @Param        request body EditLessonRequest true "Edit Lesson"
+// @Success      201  {object}  responseTypes.LessonResponse
+// @Failure      400  {string}  bad request
+// @Failure      401  {string}  unauthorized
+// @Failure      500  {string}  internal server error
+// @Router       /lesson [put]
 func EditLesson(c *gin.Context, db *gorm.DB) {
 	var editLessonRequest EditLessonRequest
 	if err := c.ShouldBindJSON(&editLessonRequest); err != nil {
@@ -118,6 +142,17 @@ func EditLesson(c *gin.Context, db *gorm.DB) {
 	c.JSON(http.StatusOK, response)
 }
 
+// DeleteLesson godoc
+// @Summary      Deletes a lesson
+// @Tags         Lessons
+// @Accept       json
+// @Produce      json
+// @Param        request body SpecificLessonRequest true "Lesson id to delete"
+// @Success      201  {string}  deleted
+// @Failure      400  {string}  bad request
+// @Failure      401  {string}  unauthorized
+// @Failure      500  {string}  internal server error
+// @Router       /lesson [delete]
 func DeleteLesson(c *gin.Context, db *gorm.DB) {
 	var lessonToDelete SpecificLessonRequest
 
@@ -150,6 +185,18 @@ func DeleteLesson(c *gin.Context, db *gorm.DB) {
 	c.JSON(http.StatusOK, "deleted")
 }
 
+// GetSpecificLesson godoc
+// @Summary      Get Specific lesson
+// @Description  Get Specific lesson
+// @Tags         Lessons
+// @Accept       json
+// @Produce      json
+// @Param        request body SpecificLessonRequest true "Edit Lesson"
+// @Success      201  {object}  responseTypes.SpecificLesson
+// @Failure      400  {string}  bad request
+// @Failure      401  {string}  unauthorized
+// @Failure      500  {string}  internal server error
+// @Router       /lesson [get]
 func GetSpecificLesson(c *gin.Context, db *gorm.DB) {
 	var lessonToGet SpecificLessonRequest
 	if err := c.ShouldBindJSON(&lessonToGet); err != nil {
@@ -194,6 +241,18 @@ func GetSpecificLesson(c *gin.Context, db *gorm.DB) {
 	c.JSON(http.StatusOK, response)
 }
 
+// GetFilteredLessonsWithSkipEntries godoc
+// @Summary      Get filtered lessons
+// @Description  Get filtered lesson based on a lot of optional filters
+// @Tags         Lessons
+// @Accept       json
+// @Produce      json
+// @Param        request body FilterLessonRequest true "Edit Lesson"
+// @Success      201  {object}  []responseTypes.FilteredLesson
+// @Failure      400  {string}  bad request
+// @Failure      401  {string}  unauthorized
+// @Failure      500  {string}  internal server error
+// @Router       /lesson/filtered [get]
 func GetFilteredLessonsWithSkipEntries(c *gin.Context, db *gorm.DB) {
 	var filterLessonRequest FilterLessonRequest
 	if err := c.ShouldBindJSON(&filterLessonRequest); err != nil {

@@ -5,12 +5,13 @@ import (
 	"dept-collector/internal/pkg/auth"
 	"dept-collector/internal/pkg/responses"
 	"dept-collector/internal/responseTypes"
-	"github.com/gin-gonic/gin"
-	"github.com/google/uuid"
-	"gorm.io/gorm"
 	"log"
 	"net/http"
 	"time"
+
+	"github.com/gin-gonic/gin"
+	"github.com/google/uuid"
+	"gorm.io/gorm"
 )
 
 // CreateNewSemester godoc
@@ -20,7 +21,7 @@ import (
 // @Accept       json
 // @Produce      json
 // @Param        request body NewSemesterRequest true "Create new semester"
-// @Success      201  {object}  NewSemesterResponse
+// @Success      201  {object}  responseTypes.NewSemesterResponse
 // @Failure      400  {string}  bad request
 // @Failure      401  {string}  unauthorized
 // @Failure      500  {string}  internal server error
