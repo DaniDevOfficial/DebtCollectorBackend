@@ -20,7 +20,8 @@ import (
 // @Produce      json
 // @Param        request body CreateNewEntryRequest true "Create new Skip entry"
 // @Success      200  {object}  responseTypes.SkipEntryResponse
-// @Failure      400  {string}  bad Request
+// @Failure      400  {string}  bad request
+// @Failure      401  {string}  unauthorized
 // @Failure      500  {string}  internal server error
 // @Router       /skips [post]
 func CreateNewSkipEntry(c *gin.Context, db *gorm.DB) {
@@ -80,7 +81,9 @@ func CreateNewSkipEntry(c *gin.Context, db *gorm.DB) {
 // @Produce      json
 // @Param        request body EditSkipEntryRequest true "Edit skip entry"
 // @Success      200  {object}  responseTypes.SkipEntryResponse
-// @Failure      400  {string}  bad Request
+// @Failure      400  {string}  bad request
+// @Failure      401  {string}  unauthorized
+// @Failure      404  {string}  not found
 // @Failure      500  {string}  internal server error
 // @Router       /skips [post]
 func EditSkipEntry(c *gin.Context, db *gorm.DB) {
@@ -146,8 +149,10 @@ func EditSkipEntry(c *gin.Context, db *gorm.DB) {
 // @Accept       json
 // @Produce      json
 // @Param        request body SingleIdRequest true "Edit skip entry"
-// @Success      200  {string}  "deleted"
-// @Failure      400  {string}  bad Request
+// @Success      204  {string}  no content
+// @Failure      400  {string}  bad request
+// @Failure      401  {string}  unauthorized
+// @Failure      404  {string}  not found
 // @Failure      500  {string}  internal server error
 // @Router       /skips [delete]
 func DeleteSkipEntry(c *gin.Context, db *gorm.DB) {
@@ -191,7 +196,9 @@ func DeleteSkipEntry(c *gin.Context, db *gorm.DB) {
 // @Produce      json
 // @Param        request body SingleIdRequest true "Edit skip entry"
 // @Success      200  {object}  responseTypes.SkipEntryResponse
-// @Failure      400  {string}  bad Request
+// @Failure      400  {string}  bad request
+// @Failure      401  {string}  unauthorized
+// @Failure      404  {string}  not found
 // @Failure      500  {string}  internal server error
 // @Router       /skips [get]
 func GetSpecificSkipEntry(c *gin.Context, db *gorm.DB) {
@@ -231,7 +238,9 @@ func GetSpecificSkipEntry(c *gin.Context, db *gorm.DB) {
 // @Produce      json
 // @Param        request body FilterSkipEntryRequest true "Edit skip entry"
 // @Success      200  {object}  []responseTypes.SkipEntryResponse
-// @Failure      400  {string}  bad Request
+// @Failure      400  {string}  bad request
+// @Failure      401  {string}  unauthorized
+// @Failure      404  {string}  not found
 // @Failure      500  {string}  internal server error
 // @Router       /skips/filtered [get]
 func GetFilteredSkipEntries(c *gin.Context, db *gorm.DB) {
@@ -248,10 +257,6 @@ func GetFilteredSkipEntries(c *gin.Context, db *gorm.DB) {
 
 	entries, err := getAllEntries(getEntryRequest, db)
 	if err != nil {
-		if errors.Is(err, gorm.ErrRecordNotFound) {
-			responses.GenericNotFoundError(c.Writer)
-			return
-		}
 		responses.GenericInternalServerError(c.Writer)
 		return
 	}

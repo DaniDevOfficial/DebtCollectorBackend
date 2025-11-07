@@ -1,11 +1,12 @@
 package responseTypes
 
 import (
-	"github.com/google/uuid"
 	"time"
+
+	"github.com/google/uuid"
 )
 
-type NewClassResponse struct {
+type ClassResponse struct {
 	ID         uuid.UUID `json:"id"`
 	Name       string    `json:"name"`
 	SemesterID uuid.UUID `json:"semesterId"`

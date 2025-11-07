@@ -54,10 +54,6 @@ func CreateNewLesson(c *gin.Context, db *gorm.DB) {
 	}
 	err = createNewLesson(&lesson, db)
 	if err != nil {
-		if errors.Is(err, gorm.ErrRecordNotFound) {
-			responses.GenericNotFoundError(c.Writer)
-			return
-		}
 		responses.GenericInternalServerError(c.Writer)
 		return
 	}
@@ -85,6 +81,7 @@ func CreateNewLesson(c *gin.Context, db *gorm.DB) {
 // @Success      201  {object}  responseTypes.LessonResponse
 // @Failure      400  {string}  bad request
 // @Failure      401  {string}  unauthorized
+// @Failure      404  {string}  not found
 // @Failure      500  {string}  internal server error
 // @Router       /lesson [put]
 func EditLesson(c *gin.Context, db *gorm.DB) {
@@ -148,9 +145,10 @@ func EditLesson(c *gin.Context, db *gorm.DB) {
 // @Accept       json
 // @Produce      json
 // @Param        request body SpecificLessonRequest true "Lesson id to delete"
-// @Success      201  {string}  deleted
+// @Success      204  {string}  no content
 // @Failure      400  {string}  bad request
 // @Failure      401  {string}  unauthorized
+// @Failure      404  {string}  not found
 // @Failure      500  {string}  internal server error
 // @Router       /lesson [delete]
 func DeleteLesson(c *gin.Context, db *gorm.DB) {
@@ -195,6 +193,7 @@ func DeleteLesson(c *gin.Context, db *gorm.DB) {
 // @Success      201  {object}  responseTypes.SpecificLesson
 // @Failure      400  {string}  bad request
 // @Failure      401  {string}  unauthorized
+// @Failure      404  {string}  not found
 // @Failure      500  {string}  internal server error
 // @Router       /lesson [get]
 func GetSpecificLesson(c *gin.Context, db *gorm.DB) {
