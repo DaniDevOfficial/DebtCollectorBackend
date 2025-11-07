@@ -17,12 +17,12 @@ func createNewLesson(lesson *models.Lesson, db *gorm.DB) error {
 	return result.Error
 }
 
-func updateLesson(lesson models.Lesson, db *gorm.DB) error {
-	result := db.Save(&lesson)
+func updateLesson(lesson *models.Lesson, db *gorm.DB) error {
+	result := db.Save(lesson)
 	if result.Error != nil {
 		return result.Error
 	}
-	result = db.Preload("Class").Where("id = ?", lesson.ID).First(&lesson)
+	result = db.Preload("Class").Where("id = ?", lesson.ID).First(lesson)
 	return result.Error
 }
 

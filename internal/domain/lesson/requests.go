@@ -23,7 +23,7 @@ type SpecificLessonRequest struct {
 
 type FilterLessonRequest struct {
 	Name      *string    `json:"reason" binding:"omitempty"`
-	StartDate *time.Time `json:"startDate" binding:"omitempty,dateTime"`
-	EndDate   *time.Time `json:"endDate" binding:"omitempty,dateTime"`
-	ClassID   *string    `json:"class_id" binding:"omitempty,uuid"`
+	StartDate *time.Time `json:"startDate" binding:"omitempty"`
+	EndDate   *time.Time `json:"endDate" binding:"omitempty"`
+	ClassID   *string    `json:"classId" binding:"omitempty,uuid"`
 }

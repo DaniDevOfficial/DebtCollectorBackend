@@ -9,27 +9,31 @@ import (
 
 func ApplyLessonFilters(filters FilterLessonRequest, db *gorm.DB) *gorm.DB {
 	query := db.Model(&models.Lesson{}).
-		Joins("LEFT JOIN skip_entry se ON lesson.id = se.lesson_id").
-		Joins("JOIN user u ON u.id = se.user_id").
-		Preload("user").Preload("skip_entry")
+		// alias the lessons table as "l"
+		Table("lessons AS l").
+		Joins("LEFT JOIN skip_entries se ON l.id = se.lesson_id").
+		Joins("LEFT JOIN users u ON u.id = se.user_id").
+		Preload("SkipEntries").
+		Preload("Class").
+		Preload("Class.Semester")
 
 	if filters.ClassID != nil {
-		query = query.Where("lesson.class_id = ?", filters.ClassID)
+		query = query.Where("l.class_id = ?", filters.ClassID)
 	}
 
 	if filters.StartDate != nil {
-		query = query.Where("lesson.start_date >= ?", filters.StartDate)
+		query = query.Where("l.start_date_time >= ?", filters.StartDate)
 	}
+
 	if filters.EndDate != nil {
-		query = query.Where("lesson.end_date <= ?", filters.EndDate)
+		query = query.Where("l.end_date_time <= ?", filters.EndDate)
 	}
 
 	if filters.Name != nil {
-		query = query.Where("lesson.name ILIKE ?", "%"+*filters.Name+"%")
+		query = query.Where("l.name ILIKE ?", "%"+*filters.Name+"%")
 	}
 
 	return query
-
 }
 
 func buildFilteredLessonsResponse(lessons []models.Lesson) []responseTypes.FilteredLesson {

@@ -6,6 +6,7 @@ import (
 	"dept-collector/internal/pkg/responses"
 	"dept-collector/internal/responseTypes"
 	"errors"
+	"log"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -95,7 +96,7 @@ func EditLesson(c *gin.Context, db *gorm.DB) {
 	}
 	lesson.ClassID = classId
 
-	err = updateLesson(lesson, db)
+	err = updateLesson(&lesson, db)
 	if err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			responses.GenericNotFoundError(c.Writer)
@@ -118,7 +119,6 @@ func EditLesson(c *gin.Context, db *gorm.DB) {
 }
 
 func DeleteLesson(c *gin.Context, db *gorm.DB) {
-
 	var lessonToDelete SpecificLessonRequest
 
 	if err := c.ShouldBindJSON(&lessonToDelete); err != nil {
@@ -147,7 +147,7 @@ func DeleteLesson(c *gin.Context, db *gorm.DB) {
 		responses.GenericInternalServerError(c.Writer)
 		return
 	}
-	c.JSON(http.StatusOK, nil)
+	c.JSON(http.StatusOK, "deleted")
 }
 
 func GetSpecificLesson(c *gin.Context, db *gorm.DB) {
@@ -197,6 +197,7 @@ func GetSpecificLesson(c *gin.Context, db *gorm.DB) {
 func GetFilteredLessonsWithSkipEntries(c *gin.Context, db *gorm.DB) {
 	var filterLessonRequest FilterLessonRequest
 	if err := c.ShouldBindJSON(&filterLessonRequest); err != nil {
+		log.Println(err)
 		responses.GenericBadRequestError(c.Writer)
 		return
 	}
