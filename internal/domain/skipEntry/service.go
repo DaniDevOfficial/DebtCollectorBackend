@@ -19,7 +19,7 @@ import (
 // @Accept       json
 // @Produce      json
 // @Param        request body CreateNewEntryRequest true "Create new Skipentry"
-// @Success      200  {string}  models.SkipEntry
+// @Success      200  {string}  responseTypes.SkipEntryResponse
 // @Failure      400  {string}  bad Request
 // @Failure      500  {string}  internal server error
 // @Router       /skips/create [post]
@@ -69,8 +69,7 @@ func CreateNewSkipEntry(c *gin.Context, db *gorm.DB) {
 		return
 	}
 
-	c.JSON(http.StatusCreated, newEntry)
-
+	c.JSON(http.StatusCreated, buildSkipEntryResponse(&newEntry))
 }
 
 // EditSkipEntry godoc
@@ -80,7 +79,7 @@ func CreateNewSkipEntry(c *gin.Context, db *gorm.DB) {
 // @Accept       json
 // @Produce      json
 // @Param        request body EditSkipEntryRequest true "Edit skip entry"
-// @Success      200  {string}  models.SkipEntry
+// @Success      200  {string}  responseTypes.SkipEntryResponse
 // @Failure      400  {string}  bad Request
 // @Failure      500  {string}  internal server error
 // @Router       /skips/create [post]
@@ -137,7 +136,7 @@ func EditSkipEntry(c *gin.Context, db *gorm.DB) {
 		return
 	}
 
-	c.JSON(http.StatusCreated, updateEntry)
+	c.JSON(http.StatusCreated, buildSkipEntryResponse(&updateEntry))
 }
 
 func DeleteSkipEntry(c *gin.Context, db *gorm.DB) {
@@ -199,7 +198,7 @@ func GetSpecificSkipEntry(c *gin.Context, db *gorm.DB) {
 		return
 	}
 
-	c.JSON(http.StatusOK, entry)
+	c.JSON(http.StatusOK, buildSkipEntryResponse(entry))
 }
 
 func GetFilteredSkipEntries(c *gin.Context, db *gorm.DB) {
@@ -224,5 +223,5 @@ func GetFilteredSkipEntries(c *gin.Context, db *gorm.DB) {
 		return
 	}
 
-	c.JSON(http.StatusOK, entries)
+	c.JSON(http.StatusOK, buildSkipEntriesResponse(entries))
 }

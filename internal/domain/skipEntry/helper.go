@@ -2,6 +2,7 @@ package skipEntry
 
 import (
 	"dept-collector/internal/models"
+	"dept-collector/internal/responseTypes"
 
 	"gorm.io/gorm"
 )
@@ -40,4 +41,28 @@ func ApplySkipEntryFilters(db *gorm.DB, filters FilterSkipEntryRequest) *gorm.DB
 	}
 
 	return query
+}
+
+func buildSkipEntryResponse(entry *models.SkipEntry) responseTypes.SkipEntryResponse {
+
+	return responseTypes.SkipEntryResponse{
+		ID:         entry.ID,
+		Reason:     entry.Reason,
+		UserID:     entry.UserID,
+		UserName:   entry.User.Name,
+		LessonID:   entry.LessonID,
+		LessonName: entry.Lesson.Name,
+		Amount:     entry.Amount.Value,
+		CreatedAt:  entry.CreatedAt,
+		UpdatedAt:  entry.UpdatedAt,
+	}
+}
+
+func buildSkipEntriesResponse(entries []models.SkipEntry) []responseTypes.SkipEntryResponse {
+	responses := make([]responseTypes.SkipEntryResponse, 0, len(entries))
+	for _, e := range entries {
+		entry := e // avoid pointer reuse
+		responses = append(responses, buildSkipEntryResponse(&entry))
+	}
+	return responses
 }
