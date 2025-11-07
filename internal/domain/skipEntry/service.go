@@ -22,7 +22,7 @@ import (
 // @Success      200  {string}  responseTypes.SkipEntryResponse
 // @Failure      400  {string}  bad Request
 // @Failure      500  {string}  internal server error
-// @Router       /skips/create [post]
+// @Router       /skips [post]
 func CreateNewSkipEntry(c *gin.Context, db *gorm.DB) {
 	var newEntryRequest CreateNewEntryRequest
 
@@ -82,7 +82,7 @@ func CreateNewSkipEntry(c *gin.Context, db *gorm.DB) {
 // @Success      200  {string}  responseTypes.SkipEntryResponse
 // @Failure      400  {string}  bad Request
 // @Failure      500  {string}  internal server error
-// @Router       /skips/create [post]
+// @Router       /skips [post]
 func EditSkipEntry(c *gin.Context, db *gorm.DB) {
 	var newEntryRequest EditSkipEntryRequest
 	if err := c.ShouldBindJSON(&newEntryRequest); err != nil {
@@ -169,7 +169,7 @@ func DeleteSkipEntry(c *gin.Context, db *gorm.DB) {
 		return
 	}
 
-	c.JSON(http.StatusNoContent, nil)
+	c.JSON(http.StatusOK, "deleted")
 }
 
 func GetSpecificSkipEntry(c *gin.Context, db *gorm.DB) {
