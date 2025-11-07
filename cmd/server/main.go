@@ -17,8 +17,7 @@ import (
 func main() {
 	err := godotenv.Load()
 	if err != nil {
-		log.Println("go env loading failed 😥")
-		return
+		log.Println("go env loading failed (no .env file) 😥")
 	}
 	db := config.ConnectDB()
 	config.AutoMigrate(db)

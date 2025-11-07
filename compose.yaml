@@ -1,0 +1,43 @@
+version: "3.9"
+
+services:
+  db:
+    image: postgres:16-alpine
+    container_name: app-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: myuser
+      POSTGRES_PASSWORD: mysecret
+      POSTGRES_DB: myapp
+    volumes:
+      - dbdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U myuser -d myapp -h 127.0.0.1"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: go-app
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      DB_USER: myuser
+      DB_PASSWORD: mysecret
+      DB_HOST: db
+      DB_PORT: "5432"
+      DB_NAME: myapp
+      DB_SSLMODE: disable
+      PORT: "8080"
+      GIN_MODE: release
+    ports:
+      - "37473:8080"
+
+volumes:
+  dbdata:
+
