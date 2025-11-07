@@ -147,12 +147,12 @@ func EditClass(c *gin.Context, db *gorm.DB) {
 // @Accept       json
 // @Produce      json
 // @Param        request body ClassIdRequest true "Get class by ID"
-// @Success      200  {object}  responseTypes.NewClassResponse
+// @Success      200  {object}  responseTypes.ClassResponse
 // @Failure      400  {string}  bad request
 // @Failure      401  {string}  unauthorized
 // @Failure      404  {string}  not found
 // @Failure      500  {string}  internal server error
-// @Router       /classes [post]
+// @Router       /classes [get]
 func GetClass(c *gin.Context, db *gorm.DB) {
 	var request ClassIdRequest
 
@@ -251,7 +251,7 @@ func DeleteClass(c *gin.Context, db *gorm.DB) {
 // @Failure      400  {string}  bad request
 // @Failure      401  {string}  unauthorized
 // @Failure      500  {string}  internal server error
-// @Router       /classes/filter [post]
+// @Router       /classes/filter [get]
 func GetFilteredClasses(c *gin.Context, db *gorm.DB) {
 	var filterRequest FilterClassRequest
 

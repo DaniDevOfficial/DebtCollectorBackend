@@ -5,7 +5,7 @@ import (
 	"time"
 )
 
-type NewSemesterResponse struct {
+type SemesterResponse struct {
 	ID        uuid.UUID `json:"id"`
 	Name      string    `json:"name"`
 	StartDate time.Time `json:"startDate"`

@@ -247,7 +247,7 @@ func GetSpecificLesson(c *gin.Context, db *gorm.DB) {
 // @Accept       json
 // @Produce      json
 // @Param        request body FilterLessonRequest true "Edit Lesson"
-// @Success      201  {object}  []responseTypes.FilteredLesson
+// @Success      201  {array}  responseTypes.FilteredLesson
 // @Failure      400  {string}  bad request
 // @Failure      401  {string}  unauthorized
 // @Failure      500  {string}  internal server error

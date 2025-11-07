@@ -23,7 +23,7 @@ import (
 // @Failure      400  {string}  bad request
 // @Failure      401  {string}  unauthorized
 // @Failure      500  {string}  internal server error
-// @Router       /skips [post]
+// @Router       /skips [get]
 func CreateNewSkipEntry(c *gin.Context, db *gorm.DB) {
 	var newEntryRequest CreateNewEntryRequest
 
@@ -48,6 +48,7 @@ func CreateNewSkipEntry(c *gin.Context, db *gorm.DB) {
 		responses.GenericBadRequestError(c.Writer, "Invalid user ID structure")
 		return
 	}
+
 	newEntry.UserID = userId
 
 	lessonId, err := uuid.Parse(newEntryRequest.LessonID)
@@ -237,7 +238,7 @@ func GetSpecificSkipEntry(c *gin.Context, db *gorm.DB) {
 // @Accept       json
 // @Produce      json
 // @Param        request body FilterSkipEntryRequest true "Edit skip entry"
-// @Success      200  {object}  []responseTypes.SkipEntryResponse
+// @Success      200  {array}  responseTypes.SkipEntryResponse
 // @Failure      400  {string}  bad request
 // @Failure      401  {string}  unauthorized
 // @Failure      404  {string}  not found
